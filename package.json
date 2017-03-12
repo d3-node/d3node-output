@@ -1,0 +1,14 @@
+{
+  "name": "d3node-output",
+  "version": "0.0.1",
+  "description": "simple way to export d3-node instance to png & html files",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "author": "Brad Oyler",
+  "license": "MIT",
+  "dependencies": {
+    "svg2png": "4.1.1"
+  }
+}
