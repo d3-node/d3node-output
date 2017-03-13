@@ -6,6 +6,10 @@
   "scripts": {
     "test": "node test"
   },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/d3-node/d3node-output.git"
+  },
   "author": "Brad Oyler",
   "license": "MIT",
   "dependencies": {
