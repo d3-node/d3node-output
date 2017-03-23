@@ -5,4 +5,9 @@ const output = require('../index');
 const csvString = fs.readFileSync('test/data.csv').toString();
 var data = d3.csvParse(csvString);
 
-output('dist/test', pieChart(data));
+const chart = pieChart(data);
+
+// test camelCase in svgString
+chart.d3Element.select('svg').append('radialGradient').attr('offset', '0%');
+
+output('dist/test', chart);
