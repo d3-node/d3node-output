@@ -29,7 +29,7 @@ module.exports = function (dest, d3n, callback) {
 
   var svgBuffer = new Buffer(svgString, 'utf-8');
   svg2png(svgBuffer)
-    .then(buffer => fs.writeFile(`${dest}.png`, buffer))
+    .then(buffer => fs.writeFileSync(`${dest}.png`, buffer))
     .then(() => console.log(`>> Exported: "${dest}.png"`))
     .catch(e => console.error('ERR:', e));
 };
