@@ -23,13 +23,12 @@ module.exports = function (dest, d3n, callback) {
     console.log(`>> Exported "${dest}.svg"`);
   });
 
-  if (typeof callback === 'function') { // used for testing
-    callback(d3n);
-  }
-
   var svgBuffer = new Buffer(svgString, 'utf-8');
   svg2png(svgBuffer)
     .then(buffer => fs.writeFile(`${dest}.png`, buffer))
-    .then(() => console.log(`>> Exported: "${dest}.png"`))
+    .then(() => {
+      console.log(`>> Exported: "${dest}.png"`);
+      if (typeof callback === 'function') callback();
+    })
     .catch(e => console.error('ERR:', e));
 };
