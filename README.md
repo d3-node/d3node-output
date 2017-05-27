@@ -13,9 +13,11 @@ npm install d3node-output
 const output = require('d3node-output')
 const voronoi = require('d3node-voronoi');
 const data = new Array(99);
+//crop your png to a custom size
+const pngOpts = {width: 100, height: 200};
 
 // output files to /dist dir
-output('./dist/myVoronoi', voronoi(data));
+output('./dist/myVoronoi', voronoi(data), pngOpts, callback);
 ```
 
 ## Contributing
