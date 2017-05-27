@@ -1,7 +1,7 @@
 const fs = require('fs');
 const svg2png = require('svg2png');
 
-module.exports = function (dest, d3n, callback) {
+module.exports = function (dest, d3n, opts, callback) {
   const d3 = d3n.d3;
 
   function eachGeoQuantize (d) {
@@ -24,7 +24,7 @@ module.exports = function (dest, d3n, callback) {
   });
 
   var svgBuffer = new Buffer(svgString, 'utf-8');
-  svg2png(svgBuffer, {})
+  svg2png(svgBuffer, opts || {})
     .then(buffer => fs.writeFileSync(`${dest}.png`, buffer))
     .then(() => {
       console.log(`>> Exported: "${dest}.png"`);

@@ -13,12 +13,13 @@ npm install d3node-output
 const output = require('d3node-output')
 const voronoi = require('d3node-voronoi');
 const data = new Array(99);
-//crop your png to a custom size
-//defaults to the size of your svg if not defined
-const pngOpts = {width: 100, height: 200};
+
+// crop your png to a custom size
+// defaults to the size of your svg if not defined
+const options = {width: 100, height: 200};
 
 // output files to /dist dir
-output('./dist/myVoronoi', voronoi(data), pngOpts, callback);
+output('./dist/myVoronoi', voronoi(data), options, callback);
 ```
 
 ## Contributing
