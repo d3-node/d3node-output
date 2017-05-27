@@ -11,7 +11,7 @@ const chart = pieChart(data);
 // test camelCase in svgString
 chart.d3Element.select('svg').append('radialGradient').attr('offset', '0%');
 
-output('dist/test', chart, () => {
+output('dist/test', chart, opts, () => {
   // assertion test
   try {
     const expectedSvg = fs.readFileSync('test/expected.svg', 'utf-8');
