@@ -7,11 +7,12 @@ const csvString = fs.readFileSync('test/data.csv').toString();
 var data = d3.csvParse(csvString);
 
 const chart = pieChart(data);
+const opts = {width: 100, height: 100};
 
 // test camelCase in svgString
 chart.d3Element.select('svg').append('radialGradient').attr('offset', '0%');
 
-output('dist/test', chart, () => {
+output('dist/test', chart, opts, () => {
   // assertion test
   try {
     const expectedSvg = fs.readFileSync('test/expected.svg', 'utf-8');
