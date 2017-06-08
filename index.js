@@ -4,6 +4,13 @@ const svg2png = require('svg2png');
 module.exports = function (dest, d3n, opts, callback) {
   const d3 = d3n.d3;
 
+  if (d3n.options.canvas) {
+    const canvas = d3n.options.canvas;
+    canvas.pngStream().pipe(fs.createWriteStream(`${dest}.png`));
+    console.log(`>> Exported canvas to ${dest}.png`);
+    return;
+  }
+
   function eachGeoQuantize (d) {
     const coords = d3.select(this).attr('d') || ''
     const rounded = coords.replace(/[0-9]*\.[0-9]*/g, (x) => (+x).toFixed(4))
