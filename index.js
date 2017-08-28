@@ -1,7 +1,7 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 
-function captureImage (html, { jpeg = false, quality, path, viewport }) {
+function captureImage (html, { jpeg, quality, path, viewport }) {
   const screenShotOptions = { viewport, path, quality };
   if (jpeg) {
     screenShotOptions.type = 'jpeg'
@@ -12,6 +12,9 @@ function captureImage (html, { jpeg = false, quality, path, viewport }) {
     browser.newPage()
     .then((page) => {
       page.setContent(html)
+      if (viewport) {
+        page.setViewport(viewport);
+      }
       page.screenshot(screenShotOptions)
       .then(() => browser.close())
       .then(() => console.log('>> Exported:', screenShotOptions.path))
@@ -40,7 +43,8 @@ module.exports = function (dest, d3n, opts, callback) {
   // reduce filesize of svg
   d3n.d3Element.selectAll('path').each(eachGeoQuantize);
 
-  fs.writeFile(`${dest}.html`, d3n.html(), function () {
+  const html = d3n.html()
+  fs.writeFile(`${dest}.html`, html, function () {
     console.log(`>> Exported "${dest}.html", open in a web browser`)
   });
 
@@ -50,10 +54,13 @@ module.exports = function (dest, d3n, opts, callback) {
   });
 
   const { width, height, jpeg, quality } = opts;
-  const viewport = { width, height }
+  let viewport = false
+  if (width && height) viewport = { width, height }
+
   const ext = jpeg ? 'jpg' : 'png'
-  captureImage(d3n.html(), { jpeg, quality, path: `${dest}.${ext}`, viewport })
+  captureImage(html, { jpeg, quality, path: `${dest}.${ext}`, viewport })
   .then(() => {
-    if (typeof callback === 'function') callback();
+    if (typeof callback === 'function') callback(); // support use of done()
   })
+  .catch(e => console.error('ERR:', e))
 };
