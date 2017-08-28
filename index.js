@@ -24,7 +24,7 @@ function captureImage (html, { jpeg, quality, path, viewport }) {
   .catch(console.error)
 }
 
-module.exports = function (dest, d3n, opts, callback) {
+module.exports = function (dest, d3n, opts = {}, callback) {
   const d3 = d3n.d3;
 
   if (d3n.options.canvas) {
