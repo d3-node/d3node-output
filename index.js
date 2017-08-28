@@ -1,14 +1,20 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 
-function capturePNG (html, options) {
-  puppeteer.launch()
+function captureImage (html, { jpeg = false, quality, path, viewport }) {
+  const screenShotOptions = { viewport, path, quality };
+  if (jpeg) {
+    screenShotOptions.type = 'jpeg'
+  }
+
+  return puppeteer.launch()
   .then((browser) => {
     browser.newPage()
     .then((page) => {
       page.setContent(html)
-      page.screenshot(options)
+      page.screenshot(screenShotOptions)
       .then(() => browser.close())
+      .then(() => console.log('>> Exported:', screenShotOptions.path))
       .catch(console.error);
     })
   })
@@ -31,7 +37,7 @@ module.exports = function (dest, d3n, opts, callback) {
     d3.select(this).attr('d', rounded);
   }
 
-  // reduce size of svg
+  // reduce filesize of svg
   d3n.d3Element.selectAll('path').each(eachGeoQuantize);
 
   fs.writeFile(`${dest}.html`, d3n.html(), function () {
@@ -43,5 +49,11 @@ module.exports = function (dest, d3n, opts, callback) {
     console.log(`>> Exported "${dest}.svg"`);
   });
 
-  capturePNG(d3n.html(), { path: `${dest}.png` })
+  const { width, height, jpeg, quality } = opts;
+  const viewport = { width, height }
+  const ext = jpeg ? 'jpg' : 'png'
+  captureImage(d3n.html(), { jpeg, quality, path: `${dest}.${ext}`, viewport })
+  .then(() => {
+    if (typeof callback === 'function') callback();
+  })
 };
