@@ -1,5 +1,28 @@
 const fs = require('fs');
-const svg2png = require('svg2png');
+const puppeteer = require('puppeteer');
+
+function captureImage (html, { jpeg, quality, path, viewport }) {
+  const screenShotOptions = { viewport, path, quality };
+  if (jpeg) {
+    screenShotOptions.type = 'jpeg'
+  }
+
+  return puppeteer.launch()
+  .then((browser) => {
+    browser.newPage()
+    .then((page) => {
+      page.setContent(html)
+      if (viewport) {
+        page.setViewport(viewport);
+      }
+      page.screenshot(screenShotOptions)
+      .then(() => browser.close())
+      .then(() => console.log('>> Exported:', screenShotOptions.path))
+      .catch(console.error);
+    })
+  })
+  .catch(console.error)
+}
 
 module.exports = function (dest, d3n, opts, callback) {
   const d3 = d3n.d3;
@@ -17,25 +40,27 @@ module.exports = function (dest, d3n, opts, callback) {
     d3.select(this).attr('d', rounded);
   }
 
-  // reduce size of svg
+  // reduce filesize of svg
   d3n.d3Element.selectAll('path').each(eachGeoQuantize);
 
-  fs.writeFile(`${dest}.html`, d3n.html(), function () {
+  const html = d3n.html()
+  const svgString = d3n.svgString();
+  fs.writeFile(`${dest}.html`, html, function () {
     console.log(`>> Exported "${dest}.html", open in a web browser`)
   });
-
-  const svgString = d3n.svgString();
 
   fs.writeFile(`${dest}.svg`, svgString, function () {
     console.log(`>> Exported "${dest}.svg"`);
   });
 
-  var svgBuffer = new Buffer(svgString, 'utf-8');
-  svg2png(svgBuffer, opts || {})
-    .then(buffer => fs.writeFileSync(`${dest}.png`, buffer))
-    .then(() => {
-      console.log(`>> Exported: "${dest}.png"`);
-      if (typeof callback === 'function') callback();
-    })
-    .catch(e => console.error('ERR:', e));
+  const { width, height, jpeg, quality } = opts;
+  let viewport = false
+  if (width && height) viewport = { width, height }
+
+  const ext = jpeg ? 'jpg' : 'png'
+  captureImage(html, { jpeg, quality, path: `${dest}.${ext}`, viewport })
+  .then(() => {
+    if (typeof callback === 'function') callback(); // support use of done()
+  })
+  .catch(e => console.error('ERR:', e))
 };
