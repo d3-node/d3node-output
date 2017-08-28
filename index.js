@@ -1,5 +1,19 @@
 const fs = require('fs');
-const svg2png = require('svg2png');
+const puppeteer = require('puppeteer');
+
+function capturePNG (html, options) {
+  puppeteer.launch()
+  .then((browser) => {
+    browser.newPage()
+    .then((page) => {
+      page.setContent(html)
+      page.screenshot(options)
+      .then(() => browser.close())
+      .catch(console.error);
+    })
+  })
+  .catch(console.error)
+}
 
 module.exports = function (dest, d3n, opts, callback) {
   const d3 = d3n.d3;
@@ -25,17 +39,9 @@ module.exports = function (dest, d3n, opts, callback) {
   });
 
   const svgString = d3n.svgString();
-
   fs.writeFile(`${dest}.svg`, svgString, function () {
     console.log(`>> Exported "${dest}.svg"`);
   });
 
-  var svgBuffer = new Buffer(svgString, 'utf-8');
-  svg2png(svgBuffer, opts || {})
-    .then(buffer => fs.writeFileSync(`${dest}.png`, buffer))
-    .then(() => {
-      console.log(`>> Exported: "${dest}.png"`);
-      if (typeof callback === 'function') callback();
-    })
-    .catch(e => console.error('ERR:', e));
+  capturePNG(d3n.html(), { path: `${dest}.png` })
 };

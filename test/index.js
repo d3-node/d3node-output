@@ -4,9 +4,9 @@ const assert = require('assert');
 const d3 = require('d3-node')().d3;
 const output = require('../index');
 const csvString = fs.readFileSync('test/data.csv').toString();
-var data = d3.csvParse(csvString);
+const data = d3.csvParse(csvString);
 
-const chart = pieChart(data);
+const chart = pieChart({ data });
 const opts = {width: 100, height: 100};
 
 // test camelCase in svgString
