@@ -22,6 +22,11 @@ const options = {width: 100, height: 200};
 output('./dist/myVoronoi', voronoi(data), options, callback);
 ```
 
+### PaaS usage:
+- Heroku: set buildpack to: https://github.com/mikeraimondi/heroku-buildpack-google-chrome
+- AWS Lambda: tbd
+- Azure functions: tbd
+
 ## Contributing
 
 1. Fork it!
@@ -29,7 +34,6 @@ output('./dist/myVoronoi', voronoi(data), options, callback);
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
-
 
 ### LICENSE
 

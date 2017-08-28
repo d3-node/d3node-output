@@ -44,11 +44,11 @@ module.exports = function (dest, d3n, opts, callback) {
   d3n.d3Element.selectAll('path').each(eachGeoQuantize);
 
   const html = d3n.html()
+  const svgString = d3n.svgString();
   fs.writeFile(`${dest}.html`, html, function () {
     console.log(`>> Exported "${dest}.html", open in a web browser`)
   });
 
-  const svgString = d3n.svgString();
   fs.writeFile(`${dest}.svg`, svgString, function () {
     console.log(`>> Exported "${dest}.svg"`);
   });
