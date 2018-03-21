@@ -1,7 +1,7 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 
-function captureImage (html, { jpeg, quality, path, viewport }) {
+function captureImage (html, { jpeg, quality, path, viewport }, callback) {
   const screenShotOptions = { viewport, path, quality };
   if (jpeg) {
     screenShotOptions.type = 'jpeg'
@@ -17,7 +17,10 @@ function captureImage (html, { jpeg, quality, path, viewport }) {
       }
       page.screenshot(screenShotOptions)
       .then(() => browser.close())
-      .then(() => console.log('>> Exported:', screenShotOptions.path))
+      .then(() => {
+        console.log('>> Exported:', screenShotOptions.path)
+        if (typeof callback === 'function') callback();
+      })
       .catch(console.error);
     })
   })
@@ -58,9 +61,5 @@ module.exports = function (dest, d3n, opts = {}, callback) {
   if (width && height) viewport = { width, height }
 
   const ext = jpeg ? 'jpg' : 'png'
-  captureImage(html, { jpeg, quality, path: `${dest}.${ext}`, viewport })
-  .then(() => {
-    if (typeof callback === 'function') callback(); // support use of done()
-  })
-  .catch(e => console.error('ERR:', e))
+  captureImage(html, { jpeg, quality, path: `${dest}.${ext}`, viewport }, callback);
 };
