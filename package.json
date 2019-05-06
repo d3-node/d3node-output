@@ -13,7 +13,7 @@
   "author": "Brad Oyler",
   "license": "MIT",
   "dependencies": {
-    "puppeteer": "0.10.1"
+    "puppeteer": "1.13.0"
   },
   "devDependencies": {
     "d3-node": "~1.1.1",
