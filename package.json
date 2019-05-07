@@ -1,6 +1,6 @@
 {
   "name": "d3node-output",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "simple way to export d3-node instance to png,jpg,svg & html files",
   "main": "index.js",
   "scripts": {
