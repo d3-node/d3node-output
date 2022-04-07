@@ -1,13 +1,13 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 
-function captureImage (html, { jpeg, quality, path, viewport }, callback) {
+function captureImage (html, { jpeg, quality, path, viewport, puppeteer_options }, callback) {
   const screenShotOptions = { viewport, path, quality };
   if (jpeg) {
     screenShotOptions.type = 'jpeg'
   }
 
-  return puppeteer.launch()
+  return puppeteer.launch(puppeteer_options)
   .then((browser) => {
     browser.newPage()
     .then((page) => {
